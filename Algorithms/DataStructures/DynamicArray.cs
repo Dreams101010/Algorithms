@@ -4,10 +4,17 @@ using System.Text;
 
 namespace Algorithms.DataStructures
 {
+    /// <summary>
+    /// Dynamic array implementation.
+    /// </summary>
+    /// <typeparam name="T">Type of elements in dynamic array.</typeparam>
     public class DynamicArray<T>
     {
+        // Internal array
         private T[] array;
+        // Current size (how many elements array actually contains)
         private int size;
+        // Current capacity (how many elements can array contain without resizing)
         private int capacity;
         // (2^31 - 2) / 2
         private const int MAX_DOUBLABLE_CAPACITY = 1_073_741_823;
@@ -29,6 +36,9 @@ namespace Algorithms.DataStructures
             Size = 0;
         }
 
+        /// <summary>
+        /// Number of elements contained in the dynamic array.
+        /// </summary>
         public int Size
         {
             get
@@ -55,6 +65,10 @@ namespace Algorithms.DataStructures
             }
         }
 
+        /// <summary>
+        /// Adds item to the end of the dynamic array, growing it if it is required.
+        /// </summary>
+        /// <param name="item">An item to add.</param>
         public void Add(T item)
         {
             if (capacity == Size)
@@ -65,6 +79,12 @@ namespace Algorithms.DataStructures
             Size++;
         }
 
+        /// <summary>
+        /// Inserts item at a given index, shifting elements to the right.
+        /// </summary>
+        /// <param name="index">Index to insert to.</param>
+        /// <param name="value">An item to insert.</param>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public void InsertAt(int index, T value)
         {
             ValidateIndex(index);
@@ -76,6 +96,13 @@ namespace Algorithms.DataStructures
             array[index] = value;
         }
 
+        /// <summary>
+        /// Removes element from the array and returns it. Elements right from the removed item
+        /// are shifted to the left.
+        /// </summary>
+        /// <param name="index">Index of element to remove</param>
+        /// <returns>Removed element.</returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         public T Remove(int index)
         {
             ValidateIndex(index);
@@ -84,11 +111,18 @@ namespace Algorithms.DataStructures
             return returnValue;
         }
 
+        /// <summary>
+        /// Clears the dynamic array.
+        /// </summary>
         public void Clear()
         {
             Size = 0;
         }
 
+        /// <summary>
+        /// Ensures that dynamic array can fit a set number of element without resizing.
+        /// </summary>
+        /// <param name="newCapacity">New capacity of the dynamic array.</param>
         public void EnsureCapacity(int newCapacity)
         {
             while (capacity < newCapacity)
@@ -97,6 +131,9 @@ namespace Algorithms.DataStructures
             }
         }
 
+        /// <summary>
+        /// Grows array either by a factor of two if it is possible or to a max capacity.
+        /// </summary>
         private void Grow()
         {
             int newCapacity;
@@ -114,15 +151,26 @@ namespace Algorithms.DataStructures
             capacity = newCapacity;
         }
 
+        /// <summary>
+        /// Checks if index is in bounds of the dynamic array.
+        /// </summary>
+        /// <param name="index">Index of element in the dynamic array.</param>
+        /// <returns>true, if index is in bounds, false otherwise</returns>
         private bool IsIndexValid(int index)
         {
-            if (index >= 0 && index < Size)
+            bool isInBounds = index >= 0 && index < Size;
+            if (isInBounds)
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Throws exception if given index is out of bounds.
+        /// </summary>
+        /// <param name="index">Index to validate.</param>
+        /// <exception cref="IndexOutOfRangeException"></exception>
         private void ValidateIndex(int index)
         {
             if (!IsIndexValid(index))
@@ -131,6 +179,10 @@ namespace Algorithms.DataStructures
             }
         }
 
+        /// <summary>
+        /// Shifts elements to the right of the element one position to the left.
+        /// </summary>
+        /// <param name="index">Index of element to shift from.</param>
         private void ShiftLeftAtIndex(int index)
         {
             for (int i = index; i < Size - 1; i++)
@@ -140,6 +192,10 @@ namespace Algorithms.DataStructures
             Size--;
         }
 
+        /// <summary>
+        /// Shifts elements to the right of the element one position to the right.
+        /// </summary>
+        /// <param name="index">Index of element to shift from.</param>
         private void ShiftRightAtIndex(int index)
         {
             for (int i = Size - 1; i >= index; i--)
