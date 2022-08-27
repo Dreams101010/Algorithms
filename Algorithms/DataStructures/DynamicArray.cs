@@ -345,6 +345,8 @@ namespace Algorithms.DataStructures
             private T current;
             public T Current => current;
 
+            object IEnumerator.Current => current;
+
             public Enumerator(DynamicArray<T> array)
             {
                 this.array = array;
@@ -352,8 +354,6 @@ namespace Algorithms.DataStructures
                 version = array.version;
                 current = default(T);
             }
-
-            object IEnumerator.Current => throw new NotImplementedException();
 
             public void Dispose()
             {   }
