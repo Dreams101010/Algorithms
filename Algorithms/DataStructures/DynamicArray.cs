@@ -9,7 +9,7 @@ namespace Algorithms.DataStructures
     /// Dynamic array implementation.
     /// </summary>
     /// <typeparam name="T">Type of elements in dynamic array.</typeparam>
-    public class DynamicArray<T> : IEnumerable<T>, ICollection<T>, IList<T>
+    public class DynamicArray<T> : IEnumerable<T>, ICollection<T>, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>
     {
         // Internal array
         private T[] array;
@@ -78,9 +78,9 @@ namespace Algorithms.DataStructures
             }
         }
 
-        public int Count => throw new NotImplementedException();
+        public int Count => Size;
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly => false;
 
         public T this[int index]
         {
