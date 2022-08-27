@@ -200,5 +200,15 @@ namespace AlgorithmsUnitTests
             // Assert
             Assert.ThrowsAny<Exception>(new Action(() => sut.EnsureCapacity(5)));
         }
+
+        [Fact]
+        public void Test_OnEnsuringCapacity_ThrowsOnNegativeCapacity()
+        {
+            // Arrange
+            var sut = new DynamicArray<int>();
+            // Act
+            // Assert
+            Assert.ThrowsAny<Exception>(new Action(() => sut.EnsureCapacity(-1)));
+        }
     }
 }
