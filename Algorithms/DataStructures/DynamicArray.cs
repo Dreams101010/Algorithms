@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace Algorithms.DataStructures
     /// Dynamic array implementation.
     /// </summary>
     /// <typeparam name="T">Type of elements in dynamic array.</typeparam>
-    public class DynamicArray<T>
+    public class DynamicArray<T> : IEnumerable<T>
     {
         // Internal array
         private T[] array;
@@ -16,6 +17,7 @@ namespace Algorithms.DataStructures
         private int size;
         // Current capacity (how many elements can array contain without resizing)
         private int capacity;
+        private int version = 0;
         // (2^31 - 2) / 2
         private const int MAX_DOUBLABLE_CAPACITY = 1_073_741_823;
         private const int MAX_CAPACITY = int.MaxValue;
@@ -72,6 +74,7 @@ namespace Algorithms.DataStructures
             private set
             {
                 size = value;
+                version++;
             }
         }
 
@@ -86,6 +89,7 @@ namespace Algorithms.DataStructures
             {
                 ValidateIndex(index);
                 array[index] = value;
+                version++;
             }
         }
 
@@ -106,6 +110,7 @@ namespace Algorithms.DataStructures
             }
             array[Size] = item;
             Size++;
+            version++;
         }
 
         /// <summary>
@@ -128,6 +133,7 @@ namespace Algorithms.DataStructures
             }
             ShiftRightAtIndex(index);
             array[index] = value;
+            version++;
         }
 
         /// <summary>
@@ -142,6 +148,7 @@ namespace Algorithms.DataStructures
             ValidateIndex(index);
             T returnValue = array[index];
             ShiftLeftAtIndex(index);
+            version++;
             return returnValue;
         }
 
@@ -151,6 +158,7 @@ namespace Algorithms.DataStructures
         public void Clear()
         {
             Size = 0;
+            version++;
         }
 
         /// <summary>
@@ -160,6 +168,7 @@ namespace Algorithms.DataStructures
         public void EnsureCapacity(int newCapacity)
         {
             Grow(newCapacity);
+            version++;
         }
 
         /// <summary>
@@ -252,5 +261,61 @@ namespace Algorithms.DataStructures
             }
             Size++;
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public struct Enumerator : IEnumerator<T>
+        {
+            private DynamicArray<T> array;
+            private int index;
+            private int version;
+            private T current;
+            public T Current => current;
+
+            public Enumerator(DynamicArray<T> array)
+            {
+                this.array = array;
+                index = 0;
+                version = array.version;
+                current = default(T);
+            }
+
+            object IEnumerator.Current => throw new NotImplementedException();
+
+            public void Dispose()
+            {   }
+
+            public bool MoveNext()
+            {
+                if (version != array.version)
+                {
+                    throw new InvalidOperationException("Enumeration failed: collection changed");
+                }
+                if (index >= array.size)
+                {
+                    current = default(T);
+                    return false;
+                }
+                current = array[index];
+                index++;
+                return true;
+            }
+
+            public void Reset()
+            {
+                index = 0;
+                version = array.version;
+                current = default(T);
+            }
+        }
     }
+
 }
