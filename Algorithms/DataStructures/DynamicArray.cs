@@ -9,7 +9,7 @@ namespace Algorithms.DataStructures
     /// Dynamic array implementation.
     /// </summary>
     /// <typeparam name="T">Type of elements in dynamic array.</typeparam>
-    public class DynamicArray<T> : IEnumerable<T>
+    public class DynamicArray<T> : IEnumerable<T>, ICollection<T>
     {
         // Internal array
         private T[] array;
@@ -77,6 +77,10 @@ namespace Algorithms.DataStructures
                 version++;
             }
         }
+
+        public int Count => throw new NotImplementedException();
+
+        public bool IsReadOnly => throw new NotImplementedException();
 
         public T this[int index]
         {
@@ -159,6 +163,11 @@ namespace Algorithms.DataStructures
         {
             Size = 0;
             version++;
+        }
+
+        public int IndexOf(T item)
+        {
+            return Array.IndexOf(array, item);
         }
 
         /// <summary>
@@ -270,6 +279,52 @@ namespace Algorithms.DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public bool Contains(T item)
+        {
+            if ((object) item == null)
+            {
+                for (int i = 0; i < Size; i++)
+                {
+                    if ((object) array[i] == null)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+                for (int i = 0; i < Size; i++)
+                {
+                    if (comparer.Equals(array[i], item))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            Array.Copy(this.array, 0, array, arrayIndex, Size);
+        }
+
+        public bool Remove(T item)
+        {
+            int removeIndex = IndexOf(item);
+            if (removeIndex >= 0)
+            {
+                Remove(removeIndex);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public struct Enumerator : IEnumerator<T>
