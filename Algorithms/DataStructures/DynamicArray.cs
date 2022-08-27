@@ -9,7 +9,7 @@ namespace Algorithms.DataStructures
     /// Dynamic array implementation.
     /// </summary>
     /// <typeparam name="T">Type of elements in dynamic array.</typeparam>
-    public class DynamicArray<T> : IEnumerable<T>, ICollection<T>
+    public class DynamicArray<T> : IEnumerable<T>, ICollection<T>, IList<T>
     {
         // Internal array
         private T[] array;
@@ -325,6 +325,16 @@ namespace Algorithms.DataStructures
             {
                 return false;
             }
+        }
+
+        public void Insert(int index, T item)
+        {
+            Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            Remove(index);
         }
 
         public struct Enumerator : IEnumerator<T>
