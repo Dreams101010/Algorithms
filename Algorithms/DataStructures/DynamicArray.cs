@@ -93,8 +93,13 @@ namespace Algorithms.DataStructures
         /// Adds item to the end of the dynamic array, growing it if it is required.
         /// </summary>
         /// <param name="item">An item to add.</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void Add(T item)
         {
+            if (Size == MAX_CAPACITY)
+            {
+                throw new InvalidOperationException("Cannot add element to dynamic array. Max capacity reached.");
+            }
             if (capacity == Size)
             {
                 Grow();
@@ -109,8 +114,13 @@ namespace Algorithms.DataStructures
         /// <param name="index">Index to insert to.</param>
         /// <param name="value">An item to insert.</param>
         /// <exception cref="IndexOutOfRangeException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public void InsertAt(int index, T value)
         {
+            if (Size == MAX_CAPACITY)
+            {
+                throw new InvalidOperationException("Cannot add element to dynamic array. Max capacity reached.");
+            }
             ValidateIndex(index);
             if (Size + 1 > capacity)
             {
@@ -149,10 +159,7 @@ namespace Algorithms.DataStructures
         /// <param name="newCapacity">New capacity of the dynamic array.</param>
         public void EnsureCapacity(int newCapacity)
         {
-            while (capacity < newCapacity)
-            {
-                Grow();
-            }
+            Grow(newCapacity);
         }
 
         /// <summary>
@@ -168,6 +175,23 @@ namespace Algorithms.DataStructures
             else
             {
                 newCapacity = MAX_CAPACITY;
+            }
+            T[] newArray = new T[newCapacity];
+            Array.Copy(array, newArray, Size);
+            array = newArray;
+            capacity = newCapacity;
+        }
+
+        /// <summary>
+        /// Grows array to specified capacity.
+        /// </summary>
+        /// <param name="newCapacity">New capacity of the dynamic array.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void Grow(int newCapacity)
+        {
+            if (newCapacity < capacity)
+            {
+                throw new InvalidOperationException("Cannot reduce capacity of the dynamic array.");
             }
             T[] newArray = new T[newCapacity];
             Array.Copy(array, newArray, Size);
