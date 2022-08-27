@@ -139,5 +139,55 @@ namespace AlgorithmsUnitTests
             // Assert
             Assert.Equal(0, sut.Size);
         }
+
+        [Theory]
+        [InlineData(new int[] { })]
+        [InlineData(new int[] { 1, 2, 3 })]
+        public void Test_OnConstructionFromArray_ReturnsCorrectCollection(int[] source)
+        {
+            // Arrange
+            // Act
+            var sut = new DynamicArray<int>(source);
+            // Assert
+            for (int i = 0; i < source.Length; i++)
+            {
+                Assert.Equal(source[i], sut[i]);
+            }
+        }
+
+        [Theory]
+        [InlineData(new int[] { })]
+        [InlineData(new int[] { 1, 2, 3 })]
+        public void Test_OnConstructionFromArray_HasCorrectSize(int[] source)
+        {
+            // Arrange
+            // Act
+            var sut = new DynamicArray<int>(source);
+            // Assert
+            Assert.Equal(source.Length, sut.Size);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        public void Test_OnConstructionFromArray_ThrowsOnNull(int[] source)
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var sut = new DynamicArray<int>(source);
+            });
+        }
+
+        [Fact]
+        public void Test_OnEnsuringCapacityPastMaximum_Throws()
+        {
+            // Arrange
+            var sut = new DynamicArray<int>();
+            // Act
+            // Assert
+            Assert.ThrowsAny<Exception>(new Action(() => sut.EnsureCapacity(int.MaxValue)));
+        }
     }
 }

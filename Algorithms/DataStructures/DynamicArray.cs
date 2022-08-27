@@ -36,6 +36,30 @@ namespace Algorithms.DataStructures
             Size = 0;
         }
 
+        public DynamicArray(T[] source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException("Source array was null");
+            }
+            if (source.Length > 0)
+            {
+                array = new T[source.Length];
+                capacity = source.Length;
+                Size = source.Length;
+                for (int i = 0; i < source.Length; i++)
+                {
+                    array[i] = source[i];
+                }
+            }
+            else
+            {
+                array = new T[1];
+                capacity = 1;
+                Size = 0;
+            }
+        }
+
         /// <summary>
         /// Number of elements contained in the dynamic array.
         /// </summary>
